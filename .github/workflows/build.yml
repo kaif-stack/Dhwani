@@ -1,0 +1,25 @@
+name: Build
+on:
+  workflow_dispatch:
+  release:
+
+jobs:
+  flutter_build:
+    name: build_flutter_android_app
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-java@v2
+        with: 
+          distribution: "zulu"
+          java-version: "11.x"
+      - uses: subosito/flutter-action@main
+        with:
+          cache: true
+      - run: flutter pub get
+      - name: flutter_generate_apk
+        run: flutter build apk
+      - uses: actions/upload-artifact@v3
+        with: 
+          name: release-builds
+          path: build/app/outputs/flutter-apk/
